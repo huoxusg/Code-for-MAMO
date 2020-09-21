@@ -99,7 +99,7 @@ class LOCALUpdate:
         torch.nn.utils.clip_grad_norm_(self.model.parameters(), 5.)
 
         u_grad, i_grad, r_grad = self.model.get_grad()
-        return u_grad, i_grad, r_grad
+        return u_grad, i_grad, r_grad, loss.item()
 
     def test(self):
         for i in range(self.n_loop):
@@ -115,6 +115,7 @@ class LOCALUpdate:
 
         # D.I.Y your calculation for the results
         q_pred_y = self.model(self.q_x1, self.q_x2)  # on query set
+        
 
 
 def maml_train(raw_phi_u, raw_phi_i, raw_phi_r, u_grad_list, i_grad_list, r_grad_list, global_lr):

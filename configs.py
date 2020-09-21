@@ -9,13 +9,13 @@ config_settings = {
     'alpha': 0.5,
     'beta': 0.05,
     'gamma': 0.1,
-    'rho': 0.01,
-    'lamda': 0.05,
+    'lr_in': 0.01,
+    'lr_out': 0.05,
     'tau': 0.01,
     'n_k': 3,
     'batch_size': 5,
     'n_epoch': 3,
     'n_inner_loop': 3,
     'active_func': 'leaky_relu',
-    'cuda_option': 'cuda:5'
+    'cuda_option': 'cuda:0'
 }

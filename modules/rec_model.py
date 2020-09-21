@@ -2,6 +2,9 @@ from utils import *
 
 
 class RecMAM(torch.nn.Module):
+    """
+    embedding -> final score
+    """
     def __init__(self, embedding_dim, n_y, n_layer, activation='sigmoid', classification=True):
         super(RecMAM, self).__init__()
         self.input_size = embedding_dim * 2

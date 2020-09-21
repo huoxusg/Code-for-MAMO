@@ -1,5 +1,6 @@
-from utils import *
-import torch.nn.functional as F
+from utils import config
+# import torch.nn.functional as F
+import torch
 
 
 class MLUserLoading(torch.nn.Module): # sharing
@@ -41,8 +42,8 @@ class MLItemLoading(torch.nn.Module): # sharing
         rate_idx, year_idx, genre_idx, director_idx = x2[:,0], x2[:,1], x2[:,2:27], x2[:,27:]
         rate_emb = self.emb_rate(rate_idx)
         year_emb = self.emb_year(year_idx)
-        genre_emb = F.sigmoid(self.emb_genre(genre_idx.float()))
-        director_emb = F.sigmoid(self.emb_director(director_idx.float()))
+        genre_emb = torch.sigmoid(self.emb_genre(genre_idx.float()))
+        director_emb = torch.sigmoid(self.emb_director(director_idx.float()))
         concat_emb = torch.cat((rate_emb, year_emb, genre_emb, director_emb), 1)
         return concat_emb
 
@@ -83,3 +84,9 @@ class BKItemLoading(torch.nn.Module):
         concat_emb = torch.cat((year_emb, author_emb, publisher_emb), 1)
         return concat_emb
 
+
+if __name__ == '__main__':
+    MLUserLoading(100)
+    MLItemLoading(100) 
+    BKUserLoading(100)
+    BKItemLoading(100)
