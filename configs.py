@@ -11,7 +11,7 @@ config_settings = {
     'gamma': 0.1,
     'rho': 0.01,
     'lamda': 0.05,
-    'tao': 0.01,
+    'tau': 0.01,
     'n_k': 3,
     'batch_size': 5,
     'n_epoch': 3,

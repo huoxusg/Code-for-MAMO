@@ -3,9 +3,9 @@
 from modules.input_loading import *
 from modules.info_embedding import *
 from modules.rec_model import *
-from modules.memories import *
+from modules.memories import FeatureMem, TaskMem
 from models import *
-from configs import *
+from configs import config_settings
 
 
 class MAMRec:
@@ -21,7 +21,7 @@ class MAMRec:
         self.embedding_dim = config_settings['embedding_dim']
         self.rho = config_settings['rho']  # local learning rate
         self.lamda = config_settings['lamda']  # global learning rate
-        self.tao = config_settings['tao']  # hyper-parameter for initializing personalized u weights
+        self.tau = config_settings['tau']  # hyper-parameter for initializing personalized u weights
         self.USE_CUDA = torch.cuda.is_available()
         self.device = torch.device(config_settings['cuda_option'] if self.USE_CUDA else "cpu")
         self.n_k = config_settings['n_k']
@@ -79,7 +79,7 @@ class MAMRec:
                 # init local parameters: theta_u, theta_i, theta_r
                 bias_term, att_values = user_mem_init(u, self.dataset, self.device, self.FeatureMEM, self.x1_loading,
                                                       self.alpha)
-                self.model.init_u_mem_weights(self.phi_u, bias_term, self.tao, self.phi_i, self.phi_r)
+                self.model.init_u_mem_weights(self.phi_u, bias_term, self.tau, self.phi_i, self.phi_r)
                 self.model.init_ui_mem_weights(att_values, self.TaskMEM)
 
                 user_module = LOCALUpdate(self.model, u, self.dataset, self.support_size, self.query_size, self.batch_size,
@@ -104,10 +104,14 @@ class MAMRec:
         for u in self.test_users:
             bias_term, att_values = user_mem_init(u, self.dataset, self.device, self.FeatureMEM, self.x1_loading,
                                                   self.alpha)
-            self.model.init_u_mem_weights(best_phi_u, bias_term, self.tao, best_phi_i, best_phi_r)
+            self.model.init_u_mem_weights(best_phi_u, bias_term, self.tau, best_phi_i, best_phi_r)
             self.model.init_ui_mem_weights(att_values, self.TaskMEM)
 
             self.model.init_weights(best_phi_u, best_phi_i, best_phi_r)
             user_module = LOCALUpdate(self.model, u, self.dataset, self.support_size, self.query_size, self.batch_size,
                                       self.n_inner_loop, self.rho, top_k=3, device=self.device)
             user_module.test()
+
+
+if __name__ == '__main__':
+    MAMRec('movielens')
